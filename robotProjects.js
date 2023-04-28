@@ -34,3 +34,41 @@ function buildGraph(edges) {
 const roadGraph = buildGraph(roads);
 
 console.log(roadGraph);
+
+class VillageState {
+  constructor(place, parcels) {
+    this.place = place;
+    this.parcels = parcels;
+  }
+
+  move(destination) {
+    if (!roadGraph[this.place].includes(destination)) {
+      return this;
+    } else {
+      let parcels = this.parcels
+        .map((p) => {
+          // checking if the parcel is in the current place.
+          if (p.place != this.place) {
+            return p;
+          }
+          return { place: destination, address: p.address };
+        })
+        .filter((p) => {
+          if (p.place != p.address) {
+            return p;
+          }
+        });
+      return new VillageState(destination, parcels);
+    }
+  }
+}
+
+let first = new VillageState("Post Office", [
+  { place: "Post Office", address: "Alice's House" },
+]);
+
+let next = first.move("Alice's House");
+
+console.log(next.place);
+console.log(next.parcels);
+console.log(first.place);
